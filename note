@@ -1,0 +1,2 @@
+- tìm hiểu method OrderRepository.findOrderByUserId(int userId)
+- code phần updateOrder
