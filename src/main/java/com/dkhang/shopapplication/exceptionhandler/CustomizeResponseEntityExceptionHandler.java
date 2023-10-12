@@ -28,12 +28,20 @@ public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExcep
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 		List<String> allMessages = ex.getFieldErrors().stream().map(fe -> fe.getDefaultMessage()).toList();
-		return new ResponseEntity<Object>(allMessages, status);
+		return new ResponseEntity<Object>(allMessages, HttpStatus.BAD_REQUEST);
 	}
 
 
 	@ExceptionHandler(UnexpectedTypeException.class)
 	public ResponseEntity<ExceptionDetails> handleUnexpectedTypeException(UnexpectedTypeException ex,
+			WebRequest request) {
+		ExceptionDetails exceptionDetails = new ExceptionDetails(LocalDateTime.now(), ex.getMessage(),
+				request.getDescription(false));
+		return new ResponseEntity<ExceptionDetails>(exceptionDetails, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(DataAlreadyExistsException.class)
+	public ResponseEntity<ExceptionDetails> handleDataAlreadyExistsException(DataAlreadyExistsException ex,
 			WebRequest request) {
 		ExceptionDetails exceptionDetails = new ExceptionDetails(LocalDateTime.now(), ex.getMessage(),
 				request.getDescription(false));

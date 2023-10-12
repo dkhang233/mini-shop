@@ -2,6 +2,8 @@ package com.dkhang.shopapplication.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,5 +27,6 @@ public class Role {
 	private int id;
 
 	@Column(name = "name" , nullable = false , length = 50)
-	private String name;
+	@Enumerated(EnumType.STRING)
+	private Name name;
 }
