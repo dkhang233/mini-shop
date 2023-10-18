@@ -1,4 +1,4 @@
-package com.dkhang.shopapplication.configurations;
+package com.dkhang.shopapplication.services;
 
 import java.security.Key;
 import java.util.Date;

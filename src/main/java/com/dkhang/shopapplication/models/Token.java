@@ -1,6 +1,6 @@
 package com.dkhang.shopapplication.models;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,9 +35,9 @@ public class Token {
 	private String tokenType;
 	
 	@Column(name = "expiration_date" , nullable = false )
-	private LocalDateTime expirationDate;
+	private Date expirationDate;
 	
-	@Column(name = "rovoked")
+	@Column(name = "revoked")
 	private Boolean revoked;
 	
 	@Column(name = "expired")

@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.dkhang.shopapplication.configurations.JwtService;
 import com.dkhang.shopapplication.dtos.UserDTO;
 import com.dkhang.shopapplication.dtos.UserLoginDTO;
 import com.dkhang.shopapplication.exceptionhandler.DataAlreadyExistsException;
@@ -28,6 +27,7 @@ public class UserServiceImpl implements UserService {
 	private final RoleRepository roleRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtService jwtService;
+	private final TokenService tokenService;
 	private final AuthenticationManager authenticationManager;
 
 	@Override
@@ -55,8 +55,9 @@ public class UserServiceImpl implements UserService {
 		}
 
 		UserDetails userDetails = userRepository.save(newUser);
-		
-		return new AuthenticationResponse(jwtService.generateToken(userDetails));
+		String generateToken = jwtService.generateToken(userDetails);
+		tokenService.createUserToken((User)userDetails, generateToken);
+		return new AuthenticationResponse(generateToken);
 	}
 
 	@Override
@@ -64,7 +65,10 @@ public class UserServiceImpl implements UserService {
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginDTO.getPhoneNumber(),userLoginDTO.getPassword()));
 		UserDetails userDetails = userRepository.findByPhoneNumber(userLoginDTO.getPhoneNumber())
 																		.orElseThrow(() -> new DataNotFoundException("Phone number or password is incorrect"));
-		return new AuthenticationResponse(jwtService.generateToken(userDetails));
+		String generateToken = jwtService.generateToken(userDetails);
+		tokenService.revokeAllToken((User)userDetails);
+		tokenService.createUserToken((User)userDetails, generateToken);
+		return new AuthenticationResponse(generateToken);
 	}
 
 	@Override
